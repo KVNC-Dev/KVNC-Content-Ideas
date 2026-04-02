@@ -1,0 +1,220 @@
+
+<style>
+  .wrap { padding: 1rem 0 1.5rem; }
+  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .fb {
+    font-size: 12px; padding: 5px 14px; border-radius: 20px;
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    color: var(--color-text-primary); cursor: pointer; transition: all 0.15s;
+  }
+  .fb.on { border-color: transparent; color: #fff; }
+  .fb.all.on { background: #4F46E5; }
+  .fb.kvnc.on { background: #4F46E5; }
+  .fb.hollow.on { background: #b82c2c; }
+  .fb.visual.on { background: #059669; }
+  .fb.trailer.on { background: #c97d2e; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+  .card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 14px;
+    display: flex; flex-direction: column; gap: 8px;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: var(--color-border-secondary); }
+  .card-top { display: flex; align-items: center; justify-content: space-between; }
+  .cat-badge {
+    font-size: 11px; padding: 2px 9px; border-radius: 20px; font-weight: 500;
+  }
+  .badge-kvnc { background: #eef0ff; color: #3730a3; }
+  .badge-hollow { background: #fef2f2; color: #991b1b; }
+  .badge-visual { background: #ecfdf5; color: #065f46; }
+  .badge-trailer { background: #fffbeb; color: #92400e; }
+  .platform-dots { display: flex; gap: 4px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-tt { background: #ff0050; }
+  .dot-ig { background: #e1306c; }
+  .dot-yt { background: #ff0000; }
+  .dot-em { background: #4F46E5; }
+  .card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; }
+  .card-desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.55; }
+  .card-tip {
+    font-size: 11px; color: var(--color-text-tertiary);
+    border-top: 0.5px solid var(--color-border-tertiary);
+    padding-top: 8px; line-height: 1.5;
+  }
+  .empty { font-size: 14px; color: var(--color-text-secondary); padding: 2rem 0; text-align: center; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .leg { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-secondary); }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+</style>
+
+<div class="wrap">
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:#ff0050"></div>TikTok</div>
+    <div class="leg"><div class="leg-dot" style="background:#e1306c"></div>Instagram</div>
+    <div class="leg"><div class="leg-dot" style="background:#ff0000"></div>YouTube</div>
+    <div class="leg"><div class="leg-dot" style="background:#4F46E5"></div>Email</div>
+  </div>
+  <div class="filter-row">
+    <button class="fb all on" onclick="filter('all')">All ideas</button>
+    <button class="fb kvnc" onclick="filter('kvnc')">KVNC Brand</button>
+    <button class="fb hollow" onclick="filter('hollow')">Hollowfield</button>
+    <button class="fb visual" onclick="filter('visual')">Graphics &amp; Posts</button>
+    <button class="fb trailer" onclick="filter('trailer')">Trailer / Video</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const ideas = [
+  {
+    cat: 'kvnc', title: '"This or That" member edition',
+    desc: 'Canva carousel: 8 slides of choices (scary game vs funny game, night owl vs early bird). Each member answers in their colour. Audience votes in the comments.',
+    tip: 'Repurpose as a TikTok poll with face cam reaction.',
+    platforms: ['tt','ig']
+  },
+  {
+    cat: 'hollow', title: 'Zone reveal card series',
+    desc: 'One Instagram post per Hollowfield zone — The Township, The Forest, The Facility, The Church, The Sewers. Dark atmospheric graphic + lore teaser text.',
+    tip: 'Post one zone per week to stretch the hype over 5 weeks.',
+    platforms: ['ig', 'tt']
+  },
+  {
+    cat: 'trailer', title: 'Atmospheric lore trailer',
+    desc: 'Like the concept trailer but focused purely on story — creepy text cards, zone visuals, "what happened in Hollowfield?" narrative. No gameplay, just mood.',
+    tip: 'Use Cinzel Decorative font + red accent colour from the Hollowfield brand.',
+    platforms: ['yt', 'tt', 'ig']
+  },
+  {
+    cat: 'visual', title: 'KVNC "stat card" posts',
+    desc: 'Each member gets a player card: name, colour, role (The Screamer, The Strategist, The Chaos Agent, etc.), and 3 gaming stats. Like a sports trading card but gamer-coded.',
+    tip: 'Drop one per week — audience guesses who each stat belongs to before reveal.',
+    platforms: ['ig', 'tt']
+  },
+  {
+    cat: 'hollow', title: '"What is The Watcher?" post',
+    desc: 'Mysterious single-image post with just the silhouette of The Watcher and the line: "It hears everything. It forgets nothing." No explanation. Let the comments speculate.',
+    tip: 'Best performed when you say nothing and let the audience fill in the gaps.',
+    platforms: ['ig', 'tt']
+  },
+  {
+    cat: 'kvnc', title: 'Group origin story post',
+    desc: 'Instagram carousel: "How KVNC started" — illustrated or photo-based timeline. How you met, first games you played together, the moment you decided to start the brand.',
+    tip: 'This kind of personal story post gets saved and shared more than any other format.',
+    platforms: ['ig', 'em']
+  },
+  {
+    cat: 'trailer', title: '"Building Hollowfield" dev trailer',
+    desc: 'CapCut montage of Roblox Studio progress — even rough grey-box builds. Fast cuts, your Deep Space colour overlay, dramatic music. Shows the PROCESS not just the result.',
+    tip: 'Rough and real beats polished and fake every time in dev content.',
+    platforms: ['yt', 'tt']
+  },
+  {
+    cat: 'visual', title: 'Hollowfield lore document posts',
+    desc: 'Design a fake "classified government document" about Hollowfield in Canva. Yellow/red stamps, redacted text, handwritten notes. Post as Instagram carousel slides.',
+    tip: 'Leave one key fact unrevealed in each doc — drives audience to comment guesses.',
+    platforms: ['ig']
+  },
+  {
+    cat: 'kvnc', title: '"Which horror game should we play?" vote',
+    desc: 'Instagram Stories poll or TikTok comment vote — give 4 options (one per KVNC member). The winning game becomes the next group session video.',
+    tip: 'Tag each option with a member colour so fans are also voting for their favourite member.',
+    platforms: ['ig', 'tt']
+  },
+  {
+    cat: 'hollow', title: 'Hollowfield "missing person" poster',
+    desc: 'A designed graphic styled as a missing persons flyer from inside the game world. Name, last seen location, physical description. Posted as if it\'s real.',
+    tip: 'In-world content like this builds lore faster than any description ever could.',
+    platforms: ['ig', 'tt']
+  },
+  {
+    cat: 'trailer', title: '"Meet The Watcher" short teaser',
+    desc: '15-second TikTok/Reel: total darkness, audio only (footsteps, breathing), then a single red eye appears. Just the tagline: "Hollowfield. Coming soon."',
+    tip: 'Recreate in CapCut using zoom + colour filter. No Roblox footage needed.',
+    platforms: ['tt', 'ig', 'yt']
+  },
+  {
+    cat: 'visual', title: 'KVNC monthly "what we played" graphic',
+    desc: 'End of month Canva graphic: 4 games you played that month, rated by each member using their colour. Like a games review roundup card.',
+    tip: 'Pin it to your Instagram grid each month — builds a visual archive of your taste.',
+    platforms: ['ig', 'em']
+  },
+  {
+    cat: 'kvnc', title: '"KVNC starter pack" meme post',
+    desc: 'Classic 2x2 meme grid. Images representing your group: someone screaming, a horror game loading screen, a midnight session snack, "we\'re definitely not scared."',
+    tip: 'Use Canva\'s meme template. These get shared aggressively if they\'re accurate and funny.',
+    platforms: ['tt', 'ig']
+  },
+  {
+    cat: 'hollow', title: 'Ending countdown series',
+    desc: 'Hollowfield has 3 endings. Post 3 cryptic graphic posts in sequence: "Ending 01 — Survive." "Ending 02 — Discover." "Ending 03 — ?" — each in a different zone colour.',
+    tip: 'Space 2–3 days apart. The audience will desperately want to know what Ending 03 is.',
+    platforms: ['ig', 'tt']
+  },
+  {
+    cat: 'visual', title: '"Progress vs reality" dev post',
+    desc: 'Side-by-side: the original Hollowfield concept art/description on the left vs your actual Roblox build on the right. Honest, funny, relatable to any creator.',
+    tip: 'Self-deprecating game dev content performs extremely well — it humanises your brand.',
+    platforms: ['tt', 'ig']
+  },
+  {
+    cat: 'trailer', title: 'KVNC brand identity reel',
+    desc: 'A 30-second visual reel introducing the brand itself — logo animation, each member in their colour, the Hollowfield title card at the end. No talking, just music and visuals.',
+    tip: 'This becomes your pinned Instagram Reel and YouTube channel trailer. Make it once, use it forever.',
+    platforms: ['ig', 'yt']
+  },
+  {
+    cat: 'kvnc', title: 'Predictions post before a game session',
+    desc: 'Before filming a horror session, each member posts their prediction: who will scream first, who will survive, who will make the worst decision. Post the results after.',
+    tip: 'Makes the actual gameplay video feel like a payoff. Two posts from one session.',
+    platforms: ['ig', 'tt']
+  },
+  {
+    cat: 'hollow', title: 'Hollowfield "radio broadcast" audio post',
+    desc: 'Record a 30-second fake emergency broadcast about Hollowfield (static, garbled voice, evacuation warning). Post as a video with a static waveform visual.',
+    tip: 'Write the script using the lore from your game doc — it\'s already fully fleshed out.',
+    platforms: ['tt', 'ig', 'yt']
+  },
+];
+
+let active = 'all';
+
+function filter(cat) {
+  active = cat;
+  document.querySelectorAll('.fb').forEach(b => b.classList.remove('on'));
+  document.querySelector('.fb.' + cat).classList.add('on');
+  render();
+}
+
+function render() {
+  const filtered = active === 'all' ? ideas : ideas.filter(i => i.cat === active || (active === 'visual' && i.cat === 'visual') || (active === 'trailer' && i.cat === 'trailer'));
+  const catFiltered = active === 'all' ? ideas : ideas.filter(i => {
+    if (active === 'visual') return i.cat === 'visual';
+    if (active === 'trailer') return i.cat === 'trailer';
+    return i.cat === active;
+  });
+
+  const grid = document.getElementById('grid');
+  if (catFiltered.length === 0) { grid.innerHTML = '<div class="empty">No ideas in this category yet.</div>'; return; }
+
+  grid.innerHTML = catFiltered.map(idea => {
+    const badge = {kvnc:'badge-kvnc',hollow:'badge-hollow',visual:'badge-visual',trailer:'badge-trailer'}[idea.cat];
+    const label = {kvnc:'KVNC Brand',hollow:'Hollowfield',visual:'Graphics',trailer:'Trailer/Video'}[idea.cat];
+    const dots = idea.platforms.map(p => `<div class="dot dot-${p}" title="${p}"></div>`).join('');
+    return `<div class="card">
+      <div class="card-top">
+        <span class="cat-badge ${badge}">${label}</span>
+        <div class="platform-dots">${dots}</div>
+      </div>
+      <div class="card-title">${idea.title}</div>
+      <div class="card-desc">${idea.desc}</div>
+      <div class="card-tip">Tip: ${idea.tip}</div>
+    </div>`;
+  }).join('');
+}
+
+render();
+</script>
